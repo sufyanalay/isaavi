@@ -1,10 +1,44 @@
 import { useEffect, useState } from "react";
-import { Tag, X, ImageOff } from "lucide-react";
+import { Tag, X, ArrowRight } from "lucide-react";
 import api from "../api";
-import Reveal from "./Reveal";
 
-/* Home page ke offers. Promo codes yahan kabhi show nahi hote —
-   codes sirf social media se milte hain. */
+/* Offers ka ticker — site ke bilkul upper top par, jahaan pehle "COD · Open before
+   payment" likha hota tha. Patti patli hai (36/40px) aur offers dayein se bayein
+   chalte hain. Promo codes yahan kabhi show nahi hote — codes sirf social media se
+   milte hain. */
+
+const SECONDS_PER_OFFER = 5; /* raftaar offers ke count ke hisaab se set hoti hai */
+const MIN_SECONDS = 30;
+
+/* Ticker ka ek tukra — sunehra nishan + badge + title, click par details khulte hain */
+function OfferChip({ offer, onOpen }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(offer)}
+      className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[.04] px-2.5 py-[3px] text-left transition-colors duration-300 hover:border-gold/60 hover:bg-white/[.09]"
+    >
+      <span aria-hidden="true" className="h-[5px] w-[5px] shrink-0 rotate-45 bg-gold" />
+
+      {offer.discountText && (
+        <span className="shrink-0 rounded-full bg-gold px-1.5 py-px text-[8.5px] font-semibold uppercase tracking-[.12em] text-ink">
+          {offer.discountText}
+        </span>
+      )}
+
+      <span className="max-w-[130px] truncate text-[12px] font-medium leading-none text-[#f6efe6] sm:max-w-[220px]">
+        {offer.title}
+      </span>
+
+      <ArrowRight
+        size={10}
+        className="hidden shrink-0 text-[#8f7f6b] transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-gold sm:block"
+      />
+    </button>
+  );
+}
+
+
 export default function Offers() {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,78 +63,59 @@ export default function Offers() {
     return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
   }, [open]);
 
+  /* load karte waqt utni hi unchaai ki patti, taake page na hile */
   if (loading)
     return (
-      <section className="shell py-16 sm:py-24">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="skeleton aspect-[4/3] rounded-[18px]" />
+      <div className="border-b border-white/10 bg-ink">
+        <div className="flex h-9 items-center gap-3 px-4 sm:h-10 sm:px-6">
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="h-4 w-24 shrink-0 animate-pulse rounded-full bg-white/[.07] sm:w-32" />
           ))}
         </div>
-      </section>
+      </div>
     );
 
   if (!offers.length) return null;
 
+  /* Loop seamless rahe isliye aadhi patti hamesha screen se chaouri hoti hai
+     (CSS me min-width:100vw hai) — kam offers ho to list dohra di jati hai. */
+  const repeats = Math.max(1, Math.ceil(6 / offers.length));
+  const half = Array.from({ length: repeats }, () => offers).flat();
+  const seconds = Math.max(MIN_SECONDS, half.length * SECONDS_PER_OFFER);
+
   return (
-    <section className="shell py-16 sm:py-24">
-      <Reveal className="mb-8">
-        <div className="relative flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b border-line pb-5 after:absolute after:-bottom-px after:left-0 after:h-px after:w-[64px] after:bg-gold after:content-['']">
-          <div>
-            <div className="eyebrow">Running now</div>
-            <h2 className="mt-2 mb-0 font-serif text-[30px] font-normal leading-none sm:text-[38px]">Offers</h2>
+    <>
+      <div className="offer-strip border-b border-white/10 bg-ink text-[#f3ebe0]">
+        <div className="flex h-9 items-stretch sm:h-10">
+          {/* left par label — ticker iske daayein se behtha hai */}
+          <div className="flex shrink-0 items-center gap-1.5 border-r border-white/10 px-2.5 sm:px-4">
+            <Tag size={12} className="text-gold" />
+            <span className="hidden text-[8.5px] font-semibold uppercase tracking-[.22em] text-[#d8c9a8] sm:inline">
+              Offers
+            </span>
           </div>
-          <p className="lede mb-0 max-w-[420px] text-[13.5px]">
-            Handpicked deals on our leather pieces. Tap an offer for the details — the matching code is shared on our
-            social media pages.
-          </p>
+
+          <div className="offer-track no-scrollbar relative min-w-0 flex-1 overflow-hidden">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-6 bg-gradient-to-r from-ink to-transparent sm:w-10"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-6 bg-gradient-to-l from-ink to-transparent sm:w-10"
+            />
+
+            <div className="marquee h-full items-center" style={{ animationDuration: `${seconds}s` }}>
+              {[0, 1].map((copy) => (
+                <div key={copy} className="marquee-pair h-full">
+                  {half.map((o, i) => (
+                    <OfferChip key={`${o._id}-${copy}-${i}`} offer={o} onOpen={setOpen} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </Reveal>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-        {offers.map((o, i) => (
-          <Reveal key={o._id} delay={Math.min(i, 4) * 70}>
-            <button
-              type="button"
-              onClick={() => setOpen(o)}
-              className="group block w-full overflow-hidden rounded-[18px] border border-line bg-card p-0 text-left transition-all duration-500 hover:-translate-y-1 hover:border-gold/60 hover:shadow-[var(--shadow-lift)]"
-            >
-              <span className="relative block aspect-[4/3] overflow-hidden bg-gradient-to-br from-[#f7f1e2] to-[#ece0c5]">
-                {o.image?.url ? (
-                  <img
-                    src={o.image.url}
-                    alt={o.title}
-                    className="h-full w-full object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(.22,.9,.25,1)] group-hover:scale-[1.06]"
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-[#b3a48f]">
-                    <ImageOff size={22} />
-                  </span>
-                )}
-
-                {o.discountText && (
-                  <span className="absolute left-3 top-3 rounded-full bg-ink/90 px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[.16em] text-[#f7f2e8] backdrop-blur-sm">
-                    {o.discountText}
-                  </span>
-                )}
-              </span>
-
-              <span className="block p-4">
-                <span className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.18em] text-gold-dark">
-                  <Tag size={12} /> Offer
-                </span>
-                <span className="mt-2 block font-serif text-[19px] leading-snug">{o.title}</span>
-                {o.description && (
-                  <span className="mt-1.5 block text-[12.5px] leading-relaxed text-muted line-clamp-2">{o.description}</span>
-                )}
-                <span className="mt-3 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[.18em] text-ink">
-                  View details
-                  <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1">→</span>
-                </span>
-              </span>
-            </button>
-          </Reveal>
-        ))}
       </div>
 
       {/* ---------- offer detail modal ---------- */}
@@ -114,6 +129,7 @@ export default function Offers() {
           />
 
           <div className="relative max-h-[90vh] w-full max-w-[560px] overflow-y-auto rounded-[20px] border border-line bg-card shadow-[var(--shadow-lift)] animate-fade-up">
+            <span aria-hidden="true" className="block h-1 w-full bg-gradient-to-r from-gold via-gold/40 to-transparent" />
             <button
               type="button"
               onClick={() => setOpen(null)}
@@ -122,14 +138,6 @@ export default function Offers() {
             >
               <X size={16} />
             </button>
-
-            {open.image?.url ? (
-              <img src={open.image.url} alt={open.title} className="aspect-[16/10] w-full object-cover" />
-            ) : (
-              <div className="flex aspect-[16/10] w-full items-center justify-center bg-gradient-to-br from-[#f7f1e2] to-[#ece0c5] text-[#b3a48f]">
-                <ImageOff size={24} />
-              </div>
-            )}
 
             <div className="p-5 sm:p-7">
               {open.discountText && (
@@ -158,6 +166,7 @@ export default function Offers() {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }
+

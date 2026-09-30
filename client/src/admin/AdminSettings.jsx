@@ -54,7 +54,7 @@ export default function AdminSettings() {
 
           <div className={cardCls}>
             <h3 className="mt-0 mb-4 text-base font-semibold">Storefront</h3>
-            <label className="block mb-4"><span className={labelCls}>Top bar announcement</span><input value={s.announcement} onChange={(e) => setS({ ...s, announcement: e.target.value })} className={inputCls} /></label>
+            {/* top bar ab offers ka ticker hai — purana "announcement" text site par nahi dikhta */}
             <div>
               <span className={labelCls}>Hero banner image</span>
               <div className="flex flex-wrap items-center gap-3">

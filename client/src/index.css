@@ -118,6 +118,13 @@
 .marquee { display: flex; width: max-content; animation: marquee 38s linear infinite; }
 .marquee-pair { display: flex; flex: none; align-items: center; }
 
+/* ---------- offers ticker (site ke upper top par, dayein se bayein chalti patli patti) ---------- */
+/* aadhi patti hamesha screen se chaouri rahe, warna loop me khaali jagah nazar aati hai */
+.offer-strip .marquee { min-width: 200vw; }
+.offer-strip .marquee-pair { min-width: 100vw; justify-content: space-evenly; }
+.offer-strip .marquee-pair > * { flex: none; }
+.offer-strip:hover .marquee, .offer-strip:focus-within .marquee { animation-play-state: paused; }
+
 /* ---------- product grid ---------- */
 .product-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
 @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 20px; } }
@@ -141,6 +148,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .marquee, .animate-fade-up, .animate-fade-in, .skeleton::after { animation: none; }
+  /* motion band hai to ticker ruk jaye, magar haath se slide karke parhne ke qabil rahe */
+  .offer-strip .offer-track { overflow-x: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .card-hover:hover, .btn-primary:hover, .btn-outline:hover, .btn-light:hover { transform: none; }
 }

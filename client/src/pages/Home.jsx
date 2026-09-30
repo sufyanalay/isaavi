@@ -1,18 +1,9 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Banknote, PackageOpen, Truck } from "lucide-react";
-import api from "../api";
 import Section from "../components/Section";
-import Offers from "../components/Offers";
 import Reveal from "../components/Reveal";
 
 export default function Home() {
-  const [settings, setSettings] = useState(null);
-
-  useEffect(() => {
-    api.get("/settings").then((r) => setSettings(r.data)).catch(() => {});
-  }, []);
-
   return (
     <div>
    <section className="relative flex min-h-[460px] items-center overflow-hidden sm:min-h-[540px] lg:min-h-[600px]">
@@ -56,9 +47,6 @@ export default function Home() {
     </Reveal>
   </div>
 </section>
-
-      {/* ---------- offers (codes social media se milte hain, yahan show nahi hote) ---------- */}
-      <Offers />
 
       {/* ---------- catalogue: real product images, ten pieces from each edit ---------- */}
       <div className="shell py-16 sm:py-24">

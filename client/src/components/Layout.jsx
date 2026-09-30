@@ -7,6 +7,7 @@ import {
 import { useCart } from "../context/CartContext";
 import api from "../api";
 import WhatsAppButton from "./WhatsAppButton";
+import Offers from "./Offers";
 import { displayPhone, whatsappLink } from "../contact";
 
 const NAV = [
@@ -65,13 +66,9 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="bg-ink text-[#f3ebe0]">
-        <div className="shell flex h-9 items-center justify-center">
-          <span className="text-center text-[9px] font-semibold uppercase tracking-[.24em] sm:text-[10px]">
-            {settings?.announcement || "Cash on delivery · Open before you pay"}
-          </span>
-        </div>
-      </div>
+      {/* upper top: pehle yahan "COD · Open before payment" likha hota tha — ab offers ka
+          ticker yahin hai, dayein se bayein chalta hai (offer na ho to patti khali reh jati hai) */}
+      <Offers />
 
       {settings?.promoActive && settings?.promoText && (
         <div className="bg-gold text-ink">

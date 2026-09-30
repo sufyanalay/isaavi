@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pencil, Trash2, Power, Plus, ImageOff } from "lucide-react";
+import { Pencil, Trash2, Power, Plus, Tag } from "lucide-react";
 import api from "../api";
 
 const BLANK = { title: "", discountText: "", description: "", terms: "", isActive: true };
@@ -7,7 +7,6 @@ const BLANK = { title: "", discountText: "", description: "", terms: "", isActiv
 export default function AdminOffers() {
   const [offers, setOffers] = useState([]);
   const [form, setForm] = useState(BLANK);
-  const [file, setFile] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -25,11 +24,10 @@ export default function AdminOffers() {
       terms: o.terms || "",
       isActive: o.isActive,
     });
-    setFile(null);
     setError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const cancelEdit = () => { setEditingId(null); setForm(BLANK); setFile(null); setError(""); };
+  const cancelEdit = () => { setEditingId(null); setForm(BLANK); setError(""); };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -37,16 +35,17 @@ export default function AdminOffers() {
     if (!form.title.trim()) return setError("Offer title is required");
     setBusy(true);
     try {
-      const fd = new FormData();
-      fd.append("title", form.title);
-      fd.append("discountText", form.discountText);
-      fd.append("description", form.description);
-      fd.append("terms", form.terms);
-      fd.append("isActive", String(form.isActive));
-      if (file) fd.append("image", file);
+      /* offers me image nahi — plain JSON body */
+      const payload = {
+        title: form.title.trim(),
+        discountText: form.discountText.trim(),
+        description: form.description,
+        terms: form.terms,
+        isActive: form.isActive,
+      };
 
-      if (editingId) await api.put(`/offers/${editingId}`, fd, { headers: { "Content-Type": "multipart/form-data" } });
-      else await api.post("/offers", fd, { headers: { "Content-Type": "multipart/form-data" } });
+      if (editingId) await api.put(`/offers/${editingId}`, payload);
+      else await api.post("/offers", payload);
 
       cancelEdit();
       load();
@@ -72,7 +71,8 @@ export default function AdminOffers() {
       <div className="border-b border-line bg-white px-4 py-4 sm:px-6 lg:px-8">
         <h1 className="m-0 font-serif text-lg font-medium sm:text-xl">Offers</h1>
         <p className="mt-1 mb-0 text-xs text-muted">
-          Active offers appear on the home page. Never put promo codes here — share those privately.
+          Active offers run in the top bar ticker. No images — just the title, a short badge and the details.
+          Never put promo codes here — share those privately.
         </p>
       </div>
 
@@ -119,14 +119,9 @@ export default function AdminOffers() {
             />
           </label>
 
-          <div className="mb-4">
-            <span className={labelCls}>Image {editingId ? "(replace)" : "(optional)"}</span>
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} className="mt-1.5 w-full text-sm" />
-          </div>
-
           <label className="mb-4 flex items-center gap-2 text-sm">
             <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />
-            Active — show this offer on the home page
+            Active — show this offer in the top bar ticker
           </label>
 
           <div className="flex flex-wrap gap-2.5">
@@ -147,12 +142,8 @@ export default function AdminOffers() {
 
           {offers.map((o) => (
             <div key={o._id} className="mb-2.5 flex flex-wrap items-center gap-3 rounded-lg border border-line bg-white p-3.5">
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-md bg-[#f0ebe0]">
-                {o.image?.url ? (
-                  <img src={o.image.url} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  <ImageOff size={16} className="text-gray-400" />
-                )}
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-[#f0ebe0]">
+                <Tag size={16} className="text-[#8f6b31]" />
               </div>
 
               <div className="min-w-0 flex-1">
