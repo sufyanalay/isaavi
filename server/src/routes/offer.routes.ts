@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { upload } from "../middleware/upload";
 import { requireAdmin } from "../middleware/auth";
 import {
   getActiveOffers, getAllOffers, createOffer, updateOffer, deleteOffer,
@@ -10,10 +9,10 @@ const router = Router();
 /* Public — sirf active offers storefront par jate hain */
 router.get("/", getActiveOffers);
 
-/* Admin only */
+/* Admin only — offers me image nahi hoti, isliye JSON body chalti hai */
 router.get("/all", requireAdmin, getAllOffers);
-router.post("/", requireAdmin, upload.single("image"), createOffer);
-router.put("/:id", requireAdmin, upload.single("image"), updateOffer);
+router.post("/", requireAdmin, createOffer);
+router.put("/:id", requireAdmin, updateOffer);
 router.delete("/:id", requireAdmin, deleteOffer);
 
 export default router;
