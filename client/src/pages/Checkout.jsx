@@ -47,7 +47,7 @@ export default function Checkout() {
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
   const inputCls =
-    "w-full border border-line rounded p-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold";
+    "w-full rounded-md border border-line bg-white px-3.5 py-2.5 text-base focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 sm:text-sm";
   const labelCls = "block text-[10px] tracking-[.18em] uppercase font-semibold text-muted mb-1.5";
 
   const submit = async (e) => {
@@ -85,13 +85,13 @@ export default function Checkout() {
   };
 
   return (
-    <main className="max-w-[1180px] mx-auto px-6 pt-8 pb-16">
-      <div className="text-[10px] tracking-[.18em] uppercase font-semibold text-muted mb-1.5">Step 2 of 2</div>
-      <h1 className="font-serif text-4xl font-normal mb-6">Checkout</h1>
+    <main className="mx-auto max-w-[1180px] px-5 pt-8 pb-16 sm:px-6">
+      <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[.18em] text-muted">Step 2 of 2</div>
+      <h1 className="mb-6 font-serif text-[30px] font-normal sm:text-4xl">Checkout</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-7 items-start">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px] lg:gap-7">
         {/* ---------- Form ---------- */}
-        <form onSubmit={submit} className="bg-card border border-line p-6 rounded">
+        <form onSubmit={submit} className="rounded-xl border border-line bg-card p-5 sm:p-6">
           <h2 className="font-serif text-2xl font-medium mt-0 mb-5">Delivery details</h2>
 
           {error && (
@@ -151,7 +151,7 @@ export default function Checkout() {
 
           <button
             disabled={busy}
-            className="w-full bg-brown text-[#f3ebe0] py-3.5 text-xs font-semibold uppercase tracking-wide rounded-sm hover:bg-ink transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-sm bg-brown py-3.5 text-xs font-semibold uppercase tracking-wide text-[#f3ebe0] transition-all hover:bg-ink active:scale-[.99] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy ? "Placing order..." : `Place COD order · Rs. ${total.toLocaleString()}`}
           </button>

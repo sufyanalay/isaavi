@@ -26,18 +26,20 @@ export default function AdminOrders() {
 
   return (
     <>
-      <div className="bg-white border-b border-line px-8 py-4.5"><h1 className="font-serif text-xl font-medium m-0">Orders</h1></div>
-      <div className="p-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
+      <div className="border-b border-line bg-white px-4 py-4 sm:px-6 lg:px-8">
+        <h1 className="m-0 font-serif text-lg font-medium sm:text-xl">Orders</h1>
+      </div>
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 lg:mb-7">
           {[
             ["Total Orders", orders.length],
             ["Pending", orders.filter((o) => o.status === "Pending").length],
             ["Awaiting Quote", orders.filter((o) => o.status === "Awaiting Quote").length],
             ["Total Value", `Rs. ${orders.reduce((a, o) => a + (o.total || 0), 0).toLocaleString()}`],
           ].map(([label, num]) => (
-            <div key={label} className="bg-white border border-line rounded-lg p-4.5">
-              <div className="text-2xl font-semibold">{num}</div>
-              <div className="text-xs text-muted uppercase tracking-wide mt-1">{label}</div>
+            <div key={label} className="rounded-lg border border-line bg-white p-4">
+              <div className="text-xl font-semibold tabular-nums sm:text-2xl">{num}</div>
+              <div className="mt-1 text-[11px] uppercase tracking-wide text-muted sm:text-xs">{label}</div>
             </div>
           ))}
         </div>
@@ -52,10 +54,10 @@ export default function AdminOrders() {
         {!shown.length && <div className="text-center text-muted py-16 text-sm">No orders in this view.</div>}
 
         {shown.map((o) => (
-          <div key={o._id} className="bg-white border border-line rounded-lg p-5 mb-3.5">
-            <div className="flex justify-between flex-wrap gap-2.5 mb-2.5">
-              <div className="flex gap-2.5 items-center">
-                <b>{o.orderNumber}</b>
+          <div key={o._id} className="mb-3.5 rounded-lg border border-line bg-white p-4 sm:p-5">
+            <div className="mb-2.5 flex flex-wrap justify-between gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <b className="break-anywhere">{o.orderNumber}</b>
                 {o.type === "custom" && <span className="text-[10px] uppercase bg-[#eee5d8] text-muted px-2 py-0.5 rounded-full">custom</span>}
                 <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase ${badgeStyle[o.status] || ""}`}>{o.status}</span>
               </div>
@@ -72,9 +74,9 @@ export default function AdminOrders() {
             {o.type === "cart" ? (
               <div className="text-sm mb-2.5">
                 {o.items.map((i, idx) => (
-                  <div key={idx} className="flex justify-between py-0.5">
-                    <span>{i.qty} × {i.name} {i.color && `(${i.color})`}</span>
-                    <span>Rs. {(i.price * i.qty).toLocaleString()}</span>
+                  <div key={idx} className="flex justify-between gap-3 py-0.5">
+                    <span className="break-anywhere">{i.qty} × {i.name} {i.color && `(${i.color})`}</span>
+                    <span className="shrink-0 tabular-nums">Rs. {(i.price * i.qty).toLocaleString()}</span>
                   </div>
                 ))}
                 <div className="border-t border-line mt-1.5 pt-1.5 text-xs text-muted">
@@ -90,8 +92,8 @@ export default function AdminOrders() {
               </div>
             )}
 
-            <div className="flex items-center gap-2.5">
-              <select value={o.status} onChange={(e) => setStatus(o._id, e.target.value)} className="border border-line rounded-md px-2.5 py-1.5 text-sm">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <select value={o.status} onChange={(e) => setStatus(o._id, e.target.value)} className="rounded-md border border-line px-2.5 py-2 text-base sm:text-sm">
                 {STATUS.map((s) => <option key={s}>{s}</option>)}
               </select>
               <a href={`https://wa.me/92${o.customer.phone.replace(/^0/, "")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 border border-line rounded-md px-3 py-1.5 text-xs hover:bg-gray-50">

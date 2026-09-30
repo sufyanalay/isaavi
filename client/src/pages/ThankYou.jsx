@@ -14,12 +14,12 @@ export default function ThankYou() {
   if (!order) return <main className="max-w-[1180px] mx-auto px-6 py-16">Loading...</main>;
 
   return (
-    <main className="max-w-[1180px] mx-auto px-6 pt-8 pb-16 text-center">
+    <main className="mx-auto max-w-[1180px] px-5 pt-8 pb-16 text-center sm:px-6">
       {showOverlay && order.type === "cart" && <DeliveryOverlay onDone={() => setShowOverlay(false)} />}
 
       <CheckCircle size={40} className="mx-auto" />
       <div className="text-[10px] tracking-[.18em] uppercase font-semibold text-muted mt-4 mb-1.5">Order {order.orderNumber}</div>
-      <h1 className="font-serif text-4xl">Thank you, {order.customer.name.split(" ")[0]}!</h1>
+      <h1 className="break-anywhere font-serif text-[30px] sm:text-4xl">Thank you, {order.customer.name.split(" ")[0]}!</h1>
       <p className="text-muted max-w-[480px] mx-auto my-3.5">
         {order.type === "custom"
           ? "Your custom request has been received. Our team will call you soon."
@@ -27,15 +27,16 @@ export default function ThankYou() {
       </p>
 
       {order.type === "cart" && (
-        <div className="text-left max-w-[560px] mx-auto bg-card p-5 rounded mt-6">
-          <h3 className="mt-0 font-medium">Packing slip</h3>
+        <div className="mx-auto mt-6 max-w-[560px] rounded-xl border border-line bg-card p-5 text-left">
+          <h3 className="mt-0 mb-3 font-medium">Packing slip</h3>
           {order.items.map((i, idx) => (
-            <div key={idx} className="flex justify-between text-sm mb-2">
-              <span>{i.qty} × {i.name}</span><span>Rs. {(i.price * i.qty).toLocaleString()}</span>
+            <div key={idx} className="mb-2 flex items-start justify-between gap-4 text-sm">
+              <span className="break-anywhere">{i.qty} × {i.name}</span>
+              <span className="shrink-0 tabular-nums">Rs. {(i.price * i.qty).toLocaleString()}</span>
             </div>
           ))}
-          <div className="border-t border-line mt-2.5 pt-2.5 flex justify-between font-semibold">
-            <span>Amount payable in cash</span><span>Rs. {order.total.toLocaleString()}</span>
+          <div className="mt-2.5 flex items-baseline justify-between gap-4 border-t border-line pt-2.5 font-semibold">
+            <span>Amount payable in cash</span><span className="shrink-0 tabular-nums">Rs. {order.total.toLocaleString()}</span>
           </div>
         </div>
       )}

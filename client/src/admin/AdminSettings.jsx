@@ -26,16 +26,21 @@ export default function AdminSettings() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  if (!s) return null;
+  if (!s)
+    return (
+      <div className="grid min-h-[50vh] place-items-center p-6 text-sm text-muted">Loading settings…</div>
+    );
 
-  const inputCls = "w-full border border-line rounded-md p-2.5 text-sm bg-[#fbfaf7] focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold";
+  const inputCls = "w-full rounded-md border border-line bg-[#fbfaf7] px-3 py-2.5 text-base focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 sm:text-sm";
   const labelCls = "block text-xs font-semibold text-muted uppercase tracking-wide mb-1.5";
-  const cardCls = "bg-white border border-line rounded-lg p-5 mb-5";
+  const cardCls = "mb-5 rounded-lg border border-line bg-white p-4 sm:p-5";
 
   return (
     <>
-      <div className="bg-white border-b border-line px-8 py-4.5"><h1 className="font-serif text-xl font-medium m-0">Settings</h1></div>
-      <div className="p-8 max-w-[640px]">
+      <div className="border-b border-line bg-white px-4 py-4 sm:px-6 lg:px-8">
+        <h1 className="m-0 font-serif text-lg font-medium sm:text-xl">Settings</h1>
+      </div>
+      <div className="max-w-[640px] p-4 sm:p-6 lg:p-8">
         {saved && <div className="bg-green-50 text-green-700 text-sm rounded p-2.5 mb-4">Settings saved successfully.</div>}
         <form onSubmit={submit}>
           <div className={cardCls}>
@@ -52,7 +57,7 @@ export default function AdminSettings() {
             <label className="block mb-4"><span className={labelCls}>Top bar announcement</span><input value={s.announcement} onChange={(e) => setS({ ...s, announcement: e.target.value })} className={inputCls} /></label>
             <div>
               <span className={labelCls}>Hero banner image</span>
-              <div className="flex gap-3 items-center">
+              <div className="flex flex-wrap items-center gap-3">
                 {s.heroImage && <img src={s.heroImage} alt="" className="w-[70px] h-[50px] object-cover rounded" />}
                 <input type="file" accept="image/*" onChange={(e) => setHeroFile(e.target.files[0])} className="text-sm" />
               </div>
@@ -61,7 +66,7 @@ export default function AdminSettings() {
 
           <div className={cardCls}>
             <h3 className="mt-0 mb-4 text-base font-semibold">Pricing</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label><span className={labelCls}>Delivery fee (Rs.)</span><input type="number" value={s.deliveryFee} onChange={(e) => setS({ ...s, deliveryFee: e.target.value })} className={inputCls} /></label>
               <label><span className={labelCls}>Gift bag fee (Rs.)</span><input type="number" value={s.giftBagFee} onChange={(e) => setS({ ...s, giftBagFee: e.target.value })} className={inputCls} /></label>
             </div>
