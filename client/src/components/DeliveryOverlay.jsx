@@ -423,7 +423,7 @@ export default function OrderOverlay({ onDone }) {
               </g>
 
               {/* tool bag */}
-              <g ref={r("bag")}><Bag r={r} /></g>
+              <g ref={r("bag")}><Bag /></g>
 
               {/* ---- the artisan ---- */}
               <g ref={r("fig")}>
@@ -591,7 +591,7 @@ function Torso({ r }) {
   );
 }
 
-function Bag({ r }) {
+function Bag() {
   return (
     <g>
       <path d="M-6 -20 Q0 -29 6 -20" stroke="#2f1d0e" strokeWidth="3" fill="none" strokeLinecap="round" />

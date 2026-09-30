@@ -1,6 +1,6 @@
-export default function ProductSkeleton({ count = 4 }) {
+export default function ProductSkeleton({ count = 4, gridClass = "product-grid" }) {
   return (
-    <div className="product-grid" aria-hidden="true">
+    <div className={gridClass} aria-hidden="true">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i}>
           <div className="skeleton aspect-[4/5] rounded-[14px]" />

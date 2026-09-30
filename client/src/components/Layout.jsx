@@ -7,6 +7,7 @@ import {
 import { useCart } from "../context/CartContext";
 import api from "../api";
 import WhatsAppButton from "./WhatsAppButton";
+import { displayPhone, whatsappLink } from "../contact";
 
 const NAV = [
   { to: "/", label: "Home", end: true },
@@ -59,7 +60,8 @@ export default function Layout() {
   const drawerLink = ({ isActive }) =>
     `flex items-center justify-between border-b border-line py-4 font-serif text-[22px] transition-colors ${isActive ? "text-ink" : "text-muted"}`;
 
-  const waNumber = String(settings?.phone || "").replace(/\D/g, "").replace(/^0/, "92");
+  const waHref = whatsappLink(settings?.phone);
+  const phoneLabel = displayPhone(settings?.phone);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -169,18 +171,11 @@ export default function Layout() {
           </nav>
 
           <div className="border-t border-line px-5 py-5">
-            {waNumber && (
-              <a
-                href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Hi Isaavi Leather, I have a question about your products.")}`}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn-primary w-full"
-              >
-                <MessageCircle size={15} /> WhatsApp us
-              </a>
-            )}
+            <a href={waHref} target="_blank" rel="noreferrer" className="btn btn-primary w-full">
+              <MessageCircle size={15} /> WhatsApp us
+            </a>
             <p className="mt-3 text-center text-[11px] tracking-wide text-muted">
-              {settings?.phone || "+92 300 000 0000"}
+              {phoneLabel}
             </p>
           </div>
         </aside>
@@ -252,16 +247,14 @@ export default function Layout() {
               <Link to="/checkout" className="link-gold w-fit text-[13px] text-[#d8c9ba] transition-colors hover:text-white">
                 Checkout
               </Link>
-              {waNumber && (
-                <a
-                  href={`https://wa.me/${waNumber}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="link-gold w-fit text-[13px] text-[#d8c9ba] transition-colors hover:text-white"
-                >
-                  Ask about an order
-                </a>
-              )}
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noreferrer"
+                className="link-gold w-fit text-[13px] text-[#d8c9ba] transition-colors hover:text-white"
+              >
+                Ask about an order
+              </a>
             </nav>
           </div>
 
@@ -269,7 +262,7 @@ export default function Layout() {
             <div className="text-[10px] font-semibold uppercase tracking-[.22em] text-[#8f7f6b]">Contact</div>
             <div className="mt-4 flex flex-col gap-3 text-[13px]">
               <span className="flex items-center gap-2.5">
-                <Phone size={14} className="shrink-0 text-gold" /> {settings?.phone || "+92 300 000 0000"}
+                <Phone size={14} className="shrink-0 text-gold" /> {phoneLabel}
               </span>
               <span className="break-anywhere flex items-center gap-2.5">
                 <Mail size={14} className="shrink-0 text-gold" /> {settings?.email || "orders@isaavileather.com"}

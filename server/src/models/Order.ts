@@ -21,6 +21,9 @@ export interface IOrder extends Document {
   subtotal: number;
   giftBagFee: number;
   deliveryFee: number;
+  promoCode?: string;
+  discountAmount: number;
+  finalTotal: number;
   total: number;
   customDetails?: { itemType: string; color: string; leatherType: string; description: string; referenceImage?: string };
   status: "Pending" | "Confirmed" | "Shipped" | "Delivered" | "Cancelled" | "Awaiting Quote";
@@ -54,6 +57,9 @@ const orderSchema = new Schema<IOrder>(
     subtotal: { type: Number, default: 0 },
     giftBagFee: { type: Number, default: 0 },
     deliveryFee: { type: Number, default: 0 },
+    promoCode: { type: String, default: "" },
+    discountAmount: { type: Number, default: 0 },
+    finalTotal: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
     customDetails: {
       itemType: String,

@@ -18,7 +18,7 @@ export interface ISettings extends Document {
 const settingsSchema = new Schema<ISettings>({
   announcement: { type: String, default: "COD · Open before payment" },
   heroImage: { type: String, default: "" },
-  phone: { type: String, default: "+92 300 000 0000" },
+  phone: { type: String, default: "0340 6011203" },
   email: { type: String, default: "orders@isaavileather.com" },
   address: { type: String, default: "Sialkot, Punjab, Pakistan" },
   deliveryFee: { type: Number, default: 250 },

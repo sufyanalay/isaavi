@@ -1,19 +1,22 @@
 import { MessageCircle } from "lucide-react";
+import { whatsappLink } from "../contact";
 
+/**
+ * Floating WhatsApp button. `phone` comes from the admin settings; when it is
+ * empty (or still a dummy number) the store number is used instead, so this
+ * icon always opens a real chat.
+ */
 export default function WhatsAppButton({ phone }) {
-  let number = String(phone || "")
-    .split("")
-    .filter((c) => c >= "0" && c <= "9")
-    .join("");
-
-  if (!number) return null;
-  if (number.startsWith("0")) number = "92" + number.slice(1);
-
-  const message = encodeURIComponent("Hi Isaavi Leather, I have a question about your products.");
-  const url = "https://wa.me/" + number + "?text=" + message;
+  const url = whatsappLink(phone);
 
   return (
-    <a href={url} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp" className="fixed bottom-5 right-5 z-40 w-[52px] h-[52px] rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Chat on WhatsApp"
+      className="fixed bottom-5 right-5 z-40 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
+    >
       <MessageCircle size={26} />
     </a>
   );

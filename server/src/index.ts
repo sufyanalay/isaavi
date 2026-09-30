@@ -8,6 +8,8 @@ import authRoutes from "./routes/auth.routes";
 import productRoutes from "./routes/product.routes";
 import orderRoutes from "./routes/order.routes";
 import settingsRoutes from "./routes/settings.routes";
+import offerRoutes from "./routes/offer.routes";
+import promoRoutes from "./routes/promo.routes";
 
 const app = express();
 app.use(helmet());
@@ -15,7 +17,8 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
-app.get("/", (_req, res) => res.json({ message: "Isaavi API running" }));app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.get("/", (_req, res) => res.json({ message: "Isaavi API running" }));
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
 let isConnected = false;
 async function connectDB() {
@@ -39,6 +42,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/offers", offerRoutes);
+app.use("/api/promos", promoRoutes);
 
 // Sirf local pe listen karo
 if (!process.env.VERCEL) {

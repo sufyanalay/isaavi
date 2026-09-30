@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import api from "../api";
+import { whatsappLink } from "../contact";
 
 const PHONE_RE = /^(\+?92|0)?3\d{9}$/;
 const MAX_MB = 6;
@@ -361,8 +362,16 @@ export default function CustomOrder() {
           )}
 
           <p className="mt-4 mb-0 text-[11px] leading-relaxed text-muted">
-            Not sure about sizing or leather? Message us on WhatsApp and we will guide you through the options before you
-            place your request.
+            Not sure about sizing or leather?{" "}
+            <a
+              href={whatsappLink()}
+              target="_blank"
+              rel="noreferrer"
+              className="link-gold font-semibold text-ink no-underline"
+            >
+              Message us on WhatsApp
+            </a>{" "}
+            and we will guide you through the options before you place your request.
           </p>
         </aside>
       </div>

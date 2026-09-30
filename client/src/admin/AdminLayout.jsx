@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Package, ShoppingBag, Settings, LogOut } from "lucide-react";
+import { Package, ShoppingBag, Settings, LogOut, Tag, Percent } from "lucide-react";
 
 export default function AdminLayout() {
   const nav = useNavigate();
@@ -28,6 +28,8 @@ export default function AdminLayout() {
 
         <nav className="no-scrollbar flex gap-2 overflow-x-auto p-2.5 md:flex-1 md:flex-col md:gap-1 md:overflow-visible">
           <NavLink to="/sialkot112200/products" className={(s) => `${linkCls(s)} shrink-0`}><Package size={16} /> Products</NavLink>
+          <NavLink to="/sialkot112200/offers" className={(s) => `${linkCls(s)} shrink-0`}><Tag size={16} /> Offers</NavLink>
+          <NavLink to="/sialkot112200/promos" className={(s) => `${linkCls(s)} shrink-0`}><Percent size={16} /> Promo Codes</NavLink>
           <NavLink to="/sialkot112200/orders" className={(s) => `${linkCls(s)} shrink-0`}><ShoppingBag size={16} /> Orders</NavLink>
           <NavLink to="/sialkot112200/settings" className={(s) => `${linkCls(s)} shrink-0`}><Settings size={16} /> Settings</NavLink>
         </nav>

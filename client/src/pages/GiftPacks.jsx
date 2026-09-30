@@ -19,27 +19,9 @@ export default function GiftPacks() {
 
   return (
     <main className="pb-16 sm:pb-24">
-      <section className="surface-deep border-b border-line">
-        <div className="shell pb-8 pt-8 sm:pb-10 sm:pt-10">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-[11px] text-muted">
-            <Link to="/" className="link-gold no-underline">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span className="text-ink">Gift Packs</span>
-          </nav>
+      <div className="shell pt-6 sm:pt-8">
+        <h1 className="sr-only">Gift Packs</h1>
 
-          <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <div className="eyebrow">Ready to gift</div>
-              <h1 className="mt-3 mb-0 font-serif text-[34px] font-normal leading-none sm:text-[48px]">Gift Packs</h1>
-            </div>
-            <p className="lede max-w-[440px]">
-              Coordinated sets, wrapped by hand. Add our leather gift bag at checkout and we will leave the price slip out.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="shell">
         <div className="flex items-center justify-between gap-4 py-5">
           <span className="text-[11px] uppercase tracking-[.14em] text-muted">
             {loading ? "Loading…" : `${products.length} ${products.length === 1 ? "set" : "sets"}`}

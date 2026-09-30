@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, MessageCircle } from "lucide-react";
 import api from "../api";
+import { whatsappNumber } from "../contact";
 
 const STATUS = ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled", "Awaiting Quote"];
 const badgeStyle = {
@@ -82,7 +83,19 @@ export default function AdminOrders() {
                 <div className="border-t border-line mt-1.5 pt-1.5 text-xs text-muted">
                   Packaging: {o.packaging} {o.giftBagFee ? `(+Rs. ${o.giftBagFee.toLocaleString()})` : ""} · Delivery: Rs. {o.deliveryFee}
                 </div>
-                <div className="font-semibold mt-1.5">Total: Rs. {o.total.toLocaleString()}</div>
+                {o.discountAmount > 0 && (
+                  <div className="mt-1 text-xs font-semibold text-green-700">
+                    Promo {o.promoCode} · − Rs. {o.discountAmount.toLocaleString()}
+                  </div>
+                )}
+                <div className="mt-1.5 font-semibold">
+                  Total: Rs. {(o.finalTotal ?? o.total).toLocaleString()}
+                  {o.discountAmount > 0 && (
+                    <span className="ml-2 text-xs font-normal text-muted">
+                      (items Rs. {o.subtotal.toLocaleString()} → after discount)
+                    </span>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="text-sm mb-2.5">
@@ -96,7 +109,7 @@ export default function AdminOrders() {
               <select value={o.status} onChange={(e) => setStatus(o._id, e.target.value)} className="rounded-md border border-line px-2.5 py-2 text-base sm:text-sm">
                 {STATUS.map((s) => <option key={s}>{s}</option>)}
               </select>
-              <a href={`https://wa.me/92${o.customer.phone.replace(/^0/, "")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 border border-line rounded-md px-3 py-1.5 text-xs hover:bg-gray-50">
+              <a href={`https://wa.me/${whatsappNumber(o.customer.phone)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 border border-line rounded-md px-3 py-1.5 text-xs hover:bg-gray-50">
                 <MessageCircle size={13} /> WhatsApp
               </a>
               <button onClick={() => remove(o._id)} className="ml-auto p-1.5 rounded hover:bg-red-50 text-muted hover:text-red-600"><Trash2 size={16} /></button>

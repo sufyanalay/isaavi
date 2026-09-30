@@ -3,6 +3,8 @@ import Order from "../models/Order";
 import Product from "../models/Product";
 import Counter from "../models/Counter";
 import Settings from "../models/Settings";
+import PromoCode, { IPromoCode } from "../models/PromoCode";
+import { promoDiscountAmount, promoProblem } from "./promo.controller";
 import { AuthRequest } from "../middleware/auth";
 import { uploadToCloudinary } from "../middleware/upload";
 
@@ -17,7 +19,7 @@ async function nextOrderNumber() {
 
 export async function createOrder(req: AuthRequest, res: Response) {
   try {
-    const { items, customer, packaging } = req.body;
+    const { items, customer, packaging, promoCode } = req.body;
     if (!items?.length) return res.status(400).json({ message: "Cart is empty" });
     if (!customer?.name || !customer?.phone || !customer?.address || !customer?.city)
       return res.status(400).json({ message: "Please fill in all details" });
@@ -43,9 +45,24 @@ export async function createOrder(req: AuthRequest, res: Response) {
     }
     if (!orderItems.length) return res.status(400).json({ message: "No valid products found" });
 
+    /* promo code yahan dobara verify hota hai — client ke discount par bharosa nahi karte */
+    const wantedCode = String(promoCode || "").trim().toUpperCase();
+    let appliedPromo: IPromoCode | null = null;
+    let discountAmount = 0;
+
+    if (wantedCode) {
+      appliedPromo = await PromoCode.findOne({ code: wantedCode });
+      if (!appliedPromo) return res.status(400).json({ message: "This promo code is not valid" });
+
+      const problem = promoProblem(appliedPromo, subtotal);
+      if (problem) return res.status(400).json({ message: problem });
+
+      discountAmount = promoDiscountAmount(appliedPromo, subtotal);
+    }
+
     const giftBagFee = packaging === "gift" ? settings.giftBagFee : 0;
     const deliveryFee = settings.deliveryFee;
-    const total = subtotal + giftBagFee + deliveryFee;
+    const total = Math.max(0, subtotal + giftBagFee + deliveryFee - discountAmount);
     const orderNumber = await nextOrderNumber();
 
     const order = await Order.create({
@@ -57,11 +74,19 @@ export async function createOrder(req: AuthRequest, res: Response) {
       subtotal,
       giftBagFee,
       deliveryFee,
+      promoCode: appliedPromo?.code || "",
+      discountAmount,
+      finalTotal: total,
       total,
       status: "Pending",
     });
 
-    res.status(201).json({ orderNumber: order.orderNumber, token: order.token });
+    /* used count sirf successful order ke baad barhta hai */
+    if (appliedPromo) {
+      await PromoCode.findByIdAndUpdate(appliedPromo._id, { $inc: { usedCount: 1 } });
+    }
+
+    res.status(201).json({ orderNumber: order.orderNumber, token: order.token, discountAmount, total });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }

@@ -11,6 +11,8 @@ import ProductDetail from "./pages/ProductDetail";
 import AdminLogin from "./admin/AdminLogin";
 import AdminLayout from "./admin/AdminLayout";
 import AdminProducts from "./admin/AdminProducts";
+import AdminOffers from "./admin/AdminOffers";
+import AdminPromos from "./admin/AdminPromos";
 import AdminOrders from "./admin/AdminOrders";
 import AdminSettings from "./admin/AdminSettings";
 import ProtectedRoute from "./admin/ProtectedRoute";
@@ -34,6 +36,8 @@ export default function App() {
       <Route path="/sialkot112200" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
         <Route index element={<Navigate to="products" replace />} />
         <Route path="products" element={<AdminProducts />} />
+        <Route path="offers" element={<AdminOffers />} />
+        <Route path="promos" element={<AdminPromos />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="settings" element={<AdminSettings />} />
       </Route>

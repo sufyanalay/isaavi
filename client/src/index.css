@@ -124,6 +124,16 @@
 @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 44px 24px; } }
 @media (max-width: 400px) { .product-grid { gap: 20px 10px; } }
 
+/* ---------- home catalogue edits (ten pieces: two rows of five on wide screens) ---------- */
+.edit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
+@media (min-width: 640px) { .edit-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 20px; } }
+@media (min-width: 1024px) { .edit-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px 20px; } }
+@media (min-width: 1280px) { .edit-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 40px 18px; } }
+@media (max-width: 400px) { .edit-grid { gap: 20px 10px; } }
+
+/* the last edit on the home page hands its trailing gap to the next band */
+.catalogue-edits > section:last-child { margin-bottom: 0; }
+
 /* ---------- small-screen helpers ---------- */
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }

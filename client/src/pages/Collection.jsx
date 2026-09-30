@@ -10,7 +10,6 @@ const CHIP_SETS = {
   her: [["all", "All"], ["card", "Cards"], ["pouch", "Pouches"], ["pack", "Packs"]],
 };
 const TITLES = { him: "For Him", her: "For Her" };
-const EYEBROWS = { him: "Menswear leather", her: "Womenswear leather" };
 
 export default function Collection({ section }) {
   const [type, setType] = useState("all");
@@ -45,29 +44,9 @@ export default function Collection({ section }) {
 
   return (
     <main className="pb-16 sm:pb-24">
-      <section className="surface-deep border-b border-line">
-        <div className="shell pb-8 pt-8 sm:pb-10 sm:pt-10">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-[11px] text-muted">
-            <Link to="/" className="link-gold no-underline">Home</Link>
-            <span aria-hidden="true">/</span>
-            <span className="text-ink">{TITLES[section]}</span>
-          </nav>
+      <div className="shell pt-6 sm:pt-8">
+        <h1 className="sr-only">{TITLES[section]}</h1>
 
-          <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <div className="eyebrow">{EYEBROWS[section]}</div>
-              <h1 className="mt-3 mb-0 font-serif text-[34px] font-normal leading-none sm:text-[48px]">
-                {TITLES[section]}
-              </h1>
-            </div>
-            <p className="lede max-w-[420px]">
-              Hand-cut, hand-stitched and finished in Sialkot. Open your parcel before you pay — cash on delivery, nationwide.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="shell">
         <div className="flex flex-col gap-4 border-b border-line py-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="no-scrollbar -mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             {chips.map(([k, l]) => (

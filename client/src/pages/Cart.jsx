@@ -17,6 +17,7 @@ import {
   Check,
 } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import PromoBox from "../components/PromoBox";
 import api from "../api";
 
 const DEFAULTS = { deliveryFee: 250, giftBagFee: 8000 };
@@ -115,7 +116,7 @@ function TrustStrip() {
 }
 
 export default function Cart() {
-  const { cart, setCart } = useCart();
+  const { cart, setCart, promoDiscount, promoCode } = useCart();
   const [settings, setSettings] = useState(DEFAULTS);
   const [packaging, setPackaging] = useState("normal");
   const nav = useNavigate();
@@ -134,7 +135,7 @@ export default function Cart() {
   const subtotal = cart.reduce((a, i) => a + i.price * i.qty, 0);
   const giftBagFee = packaging === "gift" ? Number(settings.giftBagFee) || 0 : 0;
   const deliveryFee = Number(settings.deliveryFee) || 0;
-  const total = subtotal + giftBagFee + deliveryFee;
+  const total = Math.max(0, subtotal + giftBagFee + deliveryFee - promoDiscount);
 
   const goCheckout = () => {
     sessionStorage.setItem("il_packaging", packaging);
@@ -329,7 +330,15 @@ export default function Cart() {
               <span>Delivery</span>
               <span className="tabular-nums">{deliveryFee ? `Rs. ${deliveryFee.toLocaleString()}` : "Free"}</span>
             </div>
+            {promoDiscount > 0 && (
+              <div className="mt-2.5 flex justify-between text-sm text-[#2f6b3b]">
+                <span>Promo {promoCode}</span>
+                <span className="tabular-nums">− Rs. {promoDiscount.toLocaleString()}</span>
+              </div>
+            )}
           </div>
+
+          <PromoBox className="mt-4" />
 
           <div className="mt-4 flex items-baseline justify-between border-t border-line pt-4">
             <span className="text-[10px] tracking-[.18em] uppercase font-semibold text-muted">Total (COD)</span>

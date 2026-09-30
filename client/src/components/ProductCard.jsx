@@ -4,14 +4,20 @@ import { ShoppingBag, ImageOff, Check } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { swatchOf } from "../colors";
 
-export default function ProductCard({ p }) {
+export default function ProductCard({ p = {} }) {
   const { addToCart } = useCart();
   const [imgError, setImgError] = useState(false);
+  const [secondError, setSecondError] = useState(false);
   const [added, setAdded] = useState(false);
+
+  // a card without a product would break the whole page — render nothing instead
+  if (!p.slug) return null;
 
   const primary = p.images?.[0]?.url;
   const secondary = p.images?.[1]?.url;
   const hasImage = primary && !imgError;
+  /* hover reveals the second angle — only when that photo really loads */
+  const showSecond = Boolean(secondary) && !secondError;
   const soldOut = p.inStock === false;
   const onSale = !soldOut && p.comparePrice > p.price;
   const off = onSale ? Math.round(((p.comparePrice - p.price) / p.comparePrice) * 100) : 0;
@@ -48,13 +54,14 @@ export default function ProductCard({ p }) {
               alt={p.name}
               onError={() => setImgError(true)}
               className={`h-full w-full object-cover transition-all duration-[900ms] ease-[cubic-bezier(.22,.9,.25,1)] group-hover:scale-[1.05] ${
-                secondary ? "group-hover:opacity-0" : ""
+                showSecond ? "group-hover:opacity-0" : ""
               }`}
             />
-            {secondary && (
+            {showSecond && (
               <img
                 src={secondary}
-                alt=""
+                alt={`${p.name} — second view`}
+                onError={() => setSecondError(true)}
                 className="absolute inset-0 h-full w-full scale-[1.04] object-cover opacity-0 transition-all duration-[900ms] ease-[cubic-bezier(.22,.9,.25,1)] group-hover:scale-100 group-hover:opacity-100"
               />
             )}

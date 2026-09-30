@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImageOff } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import PromoBox from "../components/PromoBox";
 import api from "../api";
 
 const DEFAULTS = { deliveryFee: 250, giftBagFee: 8000 };
@@ -20,7 +21,7 @@ function Thumb({ src }) {
 }
 
 export default function Checkout() {
-  const { cart, setCart } = useCart();
+  const { cart, setCart, promoDiscount, promoCode, removePromo } = useCart();
   const [settings, setSettings] = useState(DEFAULTS);
   const [form, setForm] = useState({ name: "", phone: "", address: "", city: "", country: "Pakistan", notes: "" });
   const [busy, setBusy] = useState(false);
@@ -42,7 +43,7 @@ export default function Checkout() {
   const subtotal = cart.reduce((a, i) => a + i.price * i.qty, 0);
   const giftBagFee = packaging === "gift" ? Number(settings.giftBagFee) || 0 : 0;
   const deliveryFee = Number(settings.deliveryFee) || 0;
-  const total = subtotal + giftBagFee + deliveryFee;
+  const total = Math.max(0, subtotal + giftBagFee + deliveryFee - promoDiscount);
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
@@ -72,9 +73,12 @@ export default function Checkout() {
         })),
         customer: form,
         packaging,
+        /* code server par dobara verify hota hai */
+        promoCode: promoDiscount > 0 ? promoCode : undefined,
       });
       justPlaced.current = true; // block redirect BEFORE clearing the cart
       setCart([]);
+      removePromo();
       sessionStorage.removeItem("il_packaging");
       nav(`/thank-you/${data.token}`);
     } catch (err) {
@@ -187,7 +191,15 @@ export default function Checkout() {
               <span>Delivery</span>
               <span>{deliveryFee ? `Rs. ${deliveryFee.toLocaleString()}` : "Free"}</span>
             </div>
+            {promoDiscount > 0 && (
+              <div className="flex justify-between text-[#2f6b3b]">
+                <span>Promo {promoCode}</span>
+                <span>− Rs. {promoDiscount.toLocaleString()}</span>
+              </div>
+            )}
           </div>
+
+          <PromoBox className="mt-3.5" />
 
           <div className="border-t border-line mt-3.5 pt-3.5 flex justify-between font-semibold text-base">
             <span>Total (COD)</span>
