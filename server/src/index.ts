@@ -15,10 +15,8 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use(morgan("dev"));
 
-// DB se pehle, taake debugging asaan ho
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.get("/", (_req, res) => res.json({ message: "Isaavi API running" }));app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
-// Cached DB connection (serverless ke liye)
 let isConnected = false;
 async function connectDB() {
   if (isConnected) return;
